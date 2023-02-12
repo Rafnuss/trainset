@@ -114,7 +114,12 @@ export default {
         // if there was no error parsing csv
         if (!this.errorUpload) {
           seriesList = Array.from(seriesList);
+          if (!seriesList.includes("pressure")){
+            this.error()
+          }
+          seriesList = [...new Set([ "pressure", ...seriesList])];
           labelList = Array.from(labelList);
+          labelList = [...new Set([ "discard", "flight", ...labelList])];
 
           this.$router.push({
             name: 'labeler',

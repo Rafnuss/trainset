@@ -58,7 +58,7 @@
                       <div id="lSelect">
                         Label:
                         <div id="lBox">
-                          <button type="button" class="close" style="margin-right: 5px; float: left;" @click="modalHandler().openAddLabel()">
+                          <button type="button" class="close" style="margin-right: 5px; float: left;" @click="addLabel()">
                             <span>&plus;</span>
                           </button>
                           <select id="labelSelect" v-model="selectedLabel">
@@ -164,7 +164,7 @@ export default {
       plottingApp.filename = this.filename;
       plottingApp.csvData = this.csvData;
       plottingApp.seriesList = this.seriesList;
-      plottingApp.labelList = this.labelList.sort();
+      plottingApp.labelList = this.labelList;
       $("#maindiv").append("<div class=\"loader\"></div>");
 
       // populate selectors
@@ -299,8 +299,8 @@ export default {
     },
     // add label in correct spot and handle delete button
     addLabel() {
-      var inputIndex = this.searchLabelList(this.optionsList, this.inputLabel);
-      this.optionsList.splice(inputIndex, 0, this.mapToColor(this.inputLabel));
+      var inputIndex = this.optionsList.length;
+      this.optionsList.splice(inputIndex, 0, this.mapToColor("elev_"+(inputIndex-1)));
       this.selectedLabel = this.optionsList[inputIndex].name;
     },
     // remove label

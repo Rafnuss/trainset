@@ -79,10 +79,6 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.2"
   },
-  "engines": {
-    "node": "^19.x",
-    "npm": "9.x"
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",

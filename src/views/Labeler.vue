@@ -307,7 +307,8 @@ export default {
     removeLabel() {
       var toDelete = $("#labelSelect option:selected").attr("name"),
       delIndex = this.optionsList.map(l => l.name).indexOf(toDelete);
-      if (delIndex != -1) {
+      console.log(toDelete)
+      if (delIndex != -1 & toDelete != "discard" & toDelete != "flight") {
         var deleted = this.optionsList.splice(delIndex, 1)[0];
         this.deleteColor(deleted.color);
         // remove label from plottingApp.allData

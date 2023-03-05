@@ -6,7 +6,7 @@ const secure = require('ssl-express-www');
 
 let app = express();
 
-app.use(secure);
+//app.use(secure);
 app.use(history());
 app.use(serveStatic(__dirname + "/dist"));
 

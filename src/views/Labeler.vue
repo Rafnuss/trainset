@@ -1,8 +1,22 @@
 <template>
   <BaseView class="container-fluid" id="plotBox">
     <template v-slot:navbar-content>
-      <h1 class="navbar-brand"><div class="homeLink" @click="routeHandler().newHome()">TRAINSET<img id="logo" src="/static/trainset_logo.png"></div></h1>
+      <h1 class="navbar-brand">
+        <div class="homeLink" @click="routeHandler().newHome()">TRAINSET<img id="logo" src="/static/trainset_logo.png"></div>
+      </h1>
+      <h1 style="color:white;margin-right: 1rem;">+</h1>
+      <a href="https://raphaelnussbaumer.com/GeoPressureR/">
+        <img style="height:56px;" src="/static/logo_geopressurer_sm.png" />
+      </a>
+      <h3 style="color:white; margin:auto;">
+        {{type=="twl"? "Twilight Labelling" : "Tag Labelling"}}
+      </h3>
       <ul class="navbar-nav ml-auto">
+        <div class="nav-link" id="instruction" v-if="type=='tag'">
+            <a href="https://raphaelnussbaumer.com/GeoPressureManual/labelling-tracks.html" target="_blank" id="instruction-a">
+              How to label tag data?
+            </a>
+          </div>
         <div class="nav-link" @click="routeHandler().newHelp()">Help</div>
         <div class="nav-link" @click="routeHandler().newLicense()">License</div>
         <li class="nav-item">
@@ -138,7 +152,8 @@ export default {
     headerStr: String,
     seriesList: Array,
     labelList: Array,
-    isValid: Boolean
+    error: String,
+    type: String
   },
   data: function() {
     return {
@@ -159,7 +174,7 @@ export default {
     };
   },
   mounted: function() {
-    if (this.isValid) {
+    if (this.error == "") {
       plottingApp.headerStr = this.headerStr;
       plottingApp.filename = this.filename;
       plottingApp.csvData = this.csvData;
@@ -176,7 +191,7 @@ export default {
       $("#export").hide();
       $("#hoverbox").hide();
       $("#labelInstr").hide();
-      this.modalHandler().openUploadFailed();
+      this.modalHandler().openUploadFailed(this.error);
     }
   },
   watch: {
@@ -250,10 +265,10 @@ export default {
           self.modal.header = "Add label";
           self.$refs.modalComponent.show();
         },
-        openUploadFailed: function() {
+        openUploadFailed: function(msg) {
           self.modal.name = "upload_failed";
           self.modal.header = "Upload Failed";
-          self.modal.failMessage = "Make sure data is in the TRAINSET format. See help.";
+          self.modal.failMessage = msg;
           self.$refs.modalComponent.show();
         },
         openAxisFailed: function() {
@@ -307,7 +322,6 @@ export default {
     removeLabel() {
       var toDelete = $("#labelSelect option:selected").attr("name"),
       delIndex = this.optionsList.map(l => l.name).indexOf(toDelete);
-      console.log(toDelete)
       if (delIndex != -1 & toDelete != "discard" & toDelete != "flight") {
         var deleted = this.optionsList.splice(delIndex, 1)[0];
         this.deleteColor(deleted.color);
@@ -600,6 +614,25 @@ kbd {
 #logo {
   max-height: 30px;
 }
+
+#instruction {
+    margin: auto;
+        border-radius: 0.3rem;
+        border-style: solid;
+    color: #7E4C64;
+    background: white;
+}
+#instruction:hover {
+     background: #7E4C64;
+    color: #f4f4f4;
+    border-color: #f4f4f4;
+    
+}
+#instruction-a {
+     text-decoration: none;
+    color: inherit;
+}
+
 </style>
 
 <style scoped>

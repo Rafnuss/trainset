@@ -2,10 +2,19 @@
   <BaseView class="container">
     <template v-slot:main-content>
       <div>
-        <h3 class="title">Welcome to TRAINSET</h3>
-        <button type="button" class="btn btn-lg btn-outline-danger upload" id="upload" @click="upload">Upload Data</button>
-        <input type="file" id="upload-file" ref="fileInput" class="fileCheck" @change="fileCheck">
-        <a id="sampleCSV" href="/static/files/sample_trainset.csv" download>sample CSV</a>
+        <h3 class="title">Welcome to TRAINSET for GeoPressureR</h3>
+      </div>
+      <div style="display: flex; align-items: stretch;">
+        <div style="flex-grow: 1;">
+          <button type="button" class="btn btn-lg btn-outline-danger upload"  @click="upload('fileInputTag')">Upload Tag Label</button>
+          <input type="file" class="upload-file" id="upload-file-tag" ref="fileInputTag"  @change="fileCheck('tag')">
+          <a class="sampleCSV" href="/static/files/sample_geopressurer_tag_label.csv" download>sample tag label</a>
+        </div>
+        <div style="flex-grow: 1;">
+          <button type="button" class="btn btn-lg btn-outline-danger upload" @click="upload('fileInputTwl')">Upload Twilight Label</button>
+          <input type="file" class="upload-file" id="upload-file-twl" ref="fileInputTwl" @change="fileCheck('twl')">
+          <a class="sampleCSV" href="/static/files/sample_geopressurer_twilight_label.csv" download>sample twilight label</a>
+        </div>
       </div>
       <br>
       <div class="info">
@@ -39,7 +48,7 @@ export default {
   },
   methods: {
     // push Labeler.vue invalid landing
-    error() {
+    error(msg) {
       this.errorUpload = true;
       this.$router.push({
         name: 'labeler',
@@ -48,7 +57,7 @@ export default {
           minMax: [],
           filename: "",
           headerStr: "",
-          isValid: false
+          error: msg
         }
       });
     },
@@ -58,15 +67,15 @@ export default {
         setTimeout(() => this.upload(), 100);
       }
     },
-    upload () {
-      this.$refs.fileInput.click();
+    upload (ref) {
+      this.$refs[ref].click();
     },
     // check format validity of csv
-    fileCheck () {
+    fileCheck (type) {
       window.onerror = (errorMsg, url, lineNumber) => {
         this.error();
       }
-      var fileInput = document.getElementById("upload-file").files.item(0), fileText;
+      var fileInput = document.getElementById("upload-file-"+type).files.item(0), fileText;
       var filename = fileInput.name.split('.csv')[0];
       var id = 0;
       var reader = new FileReader();
@@ -98,28 +107,36 @@ export default {
             });
             id++;
           } else {
+            const msg = "Error while parsing the file. See help for more info. "
             if (!(fileText[i].length === 4)) {
-              console.log('line parse error in line ' + (i+1));
+              this.error(msg+'line parse error in line ' + (i+1));
             } else if (!labelMatches) {
-              console.log('label parse error in line ' + (i+1));
+              this.error(msg+'label parse error in line ' + (i+1));
             } else if (parsedValue === Number.NaN) {
-              console.log('value parse error in line ' + (i+1));
+              this.error(msg+'value parse error in line ' + (i+1));
             } else {
-              console.log('date parse error in line ' + (i+1));
+              this.error(msg+'date parse error in line ' + (i+1));
             }
-            this.error();
             break;
           }
         }
         // if there was no error parsing csv
         if (!this.errorUpload) {
           seriesList = Array.from(seriesList);
-          if (!seriesList.includes("pressure")){
-            this.error()
+          if ( type === "tag" ){
+            if ( !seriesList.includes("pressure")){
+              this.error("The tag label data should contain the serie 'pressure'")
+            }
+            seriesList = [...new Set([ "pressure", ...seriesList])];
+            labelList = Array.from(labelList);
+            labelList = [...new Set([ "discard", "flight", ...labelList])];
+          } else if ( type === "twl" ){
+            if (!seriesList.includes("Rise") | !seriesList.includes("Set") ){
+              this.error("The twilight label data should contain the series 'Rise' and 'Set'")
+            }
+            labelList = Array.from(labelList);
+            labelList = [...new Set([ "discard", ...labelList])];
           }
-          seriesList = [...new Set([ "pressure", ...seriesList])];
-          labelList = Array.from(labelList);
-          labelList = [...new Set([ "discard", "flight", ...labelList])];
 
           this.$router.push({
             name: 'labeler',
@@ -129,7 +146,8 @@ export default {
               headerStr: headerStr,
               seriesList: seriesList,
               labelList: labelList,
-              isValid: true
+              error: "",
+              type: type
             }
           });
         }
@@ -143,15 +161,15 @@ export default {
 </script>
 
 <style scoped>
-#upload { margin-top: 20px; border-width: 3px; border-color: #7E4C64; color: #7E4C64; padding: 15px 60px; }
-#upload:hover {  background: #7E4C64; color: #f4f4f4; }
-#upload-file { display: none; }
+.upload { margin-top: 20px; border-width: 3px; border-color: #7E4C64; color: #7E4C64; padding: 15px 60px; }
+.upload:hover {  background: #7E4C64; color: #f4f4f4; }
+.upload-file { display: none; }
 .subh { font-weight: 900 !important; }
-#sampleCSV {
+.sampleCSV {
   display: block;
-  padding-top: 10px;
+  /*padding-top: 10px;
   padding-bottom: 5px;
   margin-left: 40%;
-  margin-right: 40%;
+  margin-right: 40%;*/
 }
 </style>

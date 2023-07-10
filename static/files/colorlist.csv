@@ -1,4 +1,5 @@
 name,code
+grey,#808080
 salmon,#F8766D
 jade,#00BE67
 light-purple,#C77CFF
@@ -7,3 +8,10 @@ light-blue,#00BFC4
 hot-pink,#FF61CC
 lime,#7CAE00
 azure,#00A9FF
+coral, #FF7F50
+mint-green, #98FF98
+lavender, #E6E6FA
+amber, #FFBF00
+teal, #008080
+orchid, #DA70D6
+chartreuse, #7FFF00

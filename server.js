@@ -10,7 +10,7 @@ let app = express();
 app.use(history());
 app.use(serveStatic(__dirname + "/dist"));
 
-const port = process.env.PORT || 5000;
+const port = 8082;
 
 app.listen(port, () => {
   console.log('Listening on port ' + port)

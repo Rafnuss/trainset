@@ -13,7 +13,7 @@
         <div style="flex-grow: 1;">
           <button type="button" class="btn btn-lg btn-outline-danger upload" @click="upload('fileInputTwl')">Upload Twilight Label</button>
           <input type="file" class="upload-file" id="upload-file-twl" ref="fileInputTwl" @change="fileCheck('twl')">
-          <a class="sampleCSV" href="/static/files/sample_geopressurer_twilight_label.csv" download>sample twilight label</a>
+          <a class="sampleCSV" href="/static/files/sample_geopressurer_twl_label.csv" download>sample twilight label</a>
         </div>
       </div>
       <br>

@@ -1,12 +1,12 @@
 export default {
-  data: function() {
+  data: function () {
     return {
       fullColorIndex: 0
     }
   },
   computed: {
-    colorCSV: function() {
-      return require("@/../static/files/colorlist.csv").map(function(item) {
+    colorCSV: function () {
+      return require("@/../static/files/colorlist.csv").map(function (item) {
         item.used = false
         return item
       });
@@ -16,8 +16,8 @@ export default {
     generateNextColor() {
       var retColor = this.colorCSV.find(color => color.used == false);
       if (typeof retColor === "undefined") {
-        var retCode = this.colorCSV[this.fullColorIndex].code;
         this.fullColorIndex += 1;
+        var retCode = this.colorCSV[this.fullColorIndex].code;
         if (this.fullColorIndex == this.colorCSV.length) {
           this.fullColorIndex = 0;
         }

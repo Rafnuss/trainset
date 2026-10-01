@@ -17,10 +17,10 @@ export default {
       var retColor = this.colorCSV.find(color => color.used == false);
       if (typeof retColor === "undefined") {
         this.fullColorIndex += 1;
-        var retCode = this.colorCSV[this.fullColorIndex].code;
         if (this.fullColorIndex == this.colorCSV.length) {
           this.fullColorIndex = 0;
         }
+        var retCode = this.colorCSV[this.fullColorIndex].code;
         return retCode
       }
       retColor.used = true;
